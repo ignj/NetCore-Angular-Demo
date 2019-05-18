@@ -9,7 +9,7 @@ using NetCore_Angular_Demo.Persistence;
 namespace NetCore_Angular_Demo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20190518123539_InitialModel")]
+    [Migration("20190518141712_InitialModel")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,7 +26,9 @@ namespace NetCore_Angular_Demo.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
@@ -41,13 +43,15 @@ namespace NetCore_Angular_Demo.Migrations
 
                     b.Property<int>("MakeId");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255);
 
                     b.HasKey("Id");
 
                     b.HasIndex("MakeId");
 
-                    b.ToTable("Model");
+                    b.ToTable("Models");
                 });
 
             modelBuilder.Entity("NetCore_Angular_Demo.Models.Model", b =>
