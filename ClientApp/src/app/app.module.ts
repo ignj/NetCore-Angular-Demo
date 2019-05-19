@@ -4,8 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-import { MakeService } from './services/make.service';
-import { FeatureService } from './services/feature.service';
+import { VehicleService } from './services/vehicle.service';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -35,8 +34,7 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
     ])
   ],
   providers: [
-    MakeService,
-    FeatureService
+    VehicleService    
   ],
   bootstrap: [AppComponent]
 })
