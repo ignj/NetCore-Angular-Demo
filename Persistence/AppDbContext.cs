@@ -10,6 +10,7 @@ namespace NetCore_Angular_Demo.Persistence
 
         }
 
-        public DbSet<Make> Makes { get; set; }        
+        public DbSet<Make> Makes { get; set; }
+        public DbSet<Feature> Features { get; set; }
     }
 }
