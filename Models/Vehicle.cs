@@ -23,11 +23,11 @@ namespace NetCore_Angular_Demo.Models
         [StringLength(255)]
         public string ContactPhone { get; set; }
         public DateTime LastUpdate { get; set; }
-        public ICollection<Feature> Features { get; set; }
+        public ICollection<VehicleFeature> Features { get; set; }
 
         public Vehicle()
         {
-            Features = new Collection<Feature>();
+            Features = new Collection<VehicleFeature>();
         }
 
     }
