@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetCore_Angular_Demo.Persistence;
 
 namespace NetCore_Angular_Demo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190519194920_AddVehicle")]
+    partial class AddVehicle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,7 +31,11 @@ namespace NetCore_Angular_Demo.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
+                    b.Property<int?>("VehicleId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("VehicleId");
 
                     b.ToTable("Features");
                 });
@@ -112,6 +118,13 @@ namespace NetCore_Angular_Demo.Migrations
                     b.ToTable("VehicleFeatures");
                 });
 
+            modelBuilder.Entity("NetCore_Angular_Demo.Models.Feature", b =>
+                {
+                    b.HasOne("NetCore_Angular_Demo.Models.Vehicle")
+                        .WithMany("Features")
+                        .HasForeignKey("VehicleId");
+                });
+
             modelBuilder.Entity("NetCore_Angular_Demo.Models.Model", b =>
                 {
                     b.HasOne("NetCore_Angular_Demo.Models.Make", "Make")
@@ -136,7 +149,7 @@ namespace NetCore_Angular_Demo.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("NetCore_Angular_Demo.Models.Vehicle", "Vehicle")
-                        .WithMany("Features")
+                        .WithMany()
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
