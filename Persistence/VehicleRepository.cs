@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NetCore_Angular_Demo.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using NetCore_Angular_Demo.Core;
 using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Persistence
@@ -16,8 +13,13 @@ namespace NetCore_Angular_Demo.Persistence
             this.context = context;
         }
 
-        public async Task<Vehicle> GetVehicle(int id)
+        public async Task<Vehicle> GetVehicle(int id, bool includeRelated = true)
         {
+            if (includeRelated == false)
+            {
+                return await context.Vehicles.FindAsync(id);
+            }
+
             return await context.Vehicles
                 .Include(v => v.Features)
                     .ThenInclude(vf => vf.Feature)
@@ -25,6 +27,21 @@ namespace NetCore_Angular_Demo.Persistence
                     .ThenInclude(m => m.Make)
                 .SingleOrDefaultAsync(v => v.Id == id);
             
+        }
+
+        //public async Task<Vehicle> GetVehicleWithMake(int id)
+        //{
+
+        //}
+
+        public void Add(Vehicle vehicle)
+        {
+            context.Vehicles.Add(vehicle);
+        }
+
+        public void Remove(Vehicle vehicle)
+        {
+            context.Vehicles.Remove(vehicle);
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NetCore_Angular_Demo.Mapping;
+using NetCore_Angular_Demo.Core;
 using NetCore_Angular_Demo.Persistence;
 
 namespace NetCore_Angular_Demo
@@ -26,6 +27,8 @@ namespace NetCore_Angular_Demo
         {
             //Register Repository => As the DBContext is scoped, it makes sense to take the same approach with the repository
             services.AddScoped<IVehicleRepository, VehicleRepository>();
+            services.AddScoped<IModelRepository, ModelRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Auto Mapper Configurations
             var mappingConfig = new MapperConfiguration(mc =>

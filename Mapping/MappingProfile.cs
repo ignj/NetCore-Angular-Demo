@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using NetCore_Angular_Demo.Controllers.Resources;
-using NetCore_Angular_Demo.Models;
+using NetCore_Angular_Demo.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

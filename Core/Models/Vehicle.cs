@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace NetCore_Angular_Demo.Models
+namespace NetCore_Angular_Demo.Core
 {
     public class Vehicle
     {

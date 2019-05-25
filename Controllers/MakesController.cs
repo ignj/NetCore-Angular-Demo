@@ -6,7 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetCore_Angular_Demo.Controllers.Resources;
-using NetCore_Angular_Demo.Models;
+using NetCore_Angular_Demo.Core;
 using NetCore_Angular_Demo.Persistence;
 
 namespace NetCore_Angular_Demo.Controllers
