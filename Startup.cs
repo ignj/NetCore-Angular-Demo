@@ -24,6 +24,9 @@ namespace NetCore_Angular_Demo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Register Repository => As the DBContext is scoped, it makes sense to take the same approach with the repository
+            services.AddScoped<IVehicleRepository, VehicleRepository>();
+
             // Auto Mapper Configurations
             var mappingConfig = new MapperConfiguration(mc =>
             {
