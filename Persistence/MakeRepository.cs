@@ -1,17 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NetCore_Angular_Demo.Core;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Persistence
 {
-    public class MakesRepository : IMakesRepository
+    public class MakeRepository : IMakeRepository
     {
         private readonly AppDbContext context;
 
-        public MakesRepository(AppDbContext context)
+        public MakeRepository(AppDbContext context)
         {
             this.context = context;
         }

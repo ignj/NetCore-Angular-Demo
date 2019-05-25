@@ -28,7 +28,8 @@ namespace NetCore_Angular_Demo
             //Register Repository => As the DBContext is scoped, it makes sense to take the same approach with the repository
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IModelRepository, ModelRepository>();
-            services.AddScoped<IMakesRepository, MakesRepository>();
+            services.AddScoped<IMakeRepository, MakeRepository>();
+            services.AddScoped<IFeatureRepository, FeatureRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
