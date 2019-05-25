@@ -6,20 +6,20 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetCore_Angular_Demo.Controllers.Resources;
-using NetCore_Angular_Demo.Models;
+using NetCore_Angular_Demo.Core;
 using NetCore_Angular_Demo.Persistence;
 
 namespace NetCore_Angular_Demo.Controllers
 {
     public class MakesController : Controller
-    {
-        private readonly AppDbContext dbContext;
+    {        
         private readonly IMapper mapper;
+        private readonly IMakesRepository makesRepository;
 
-        public MakesController(AppDbContext dbContext, IMapper mapper)
-        {
-            this.dbContext = dbContext;
+        public MakesController(IMapper mapper, IMakesRepository makesRepository)
+        {            
             this.mapper = mapper;
+            this.makesRepository = makesRepository;
         }
 
         public IActionResult Index()
@@ -30,9 +30,9 @@ namespace NetCore_Angular_Demo.Controllers
         [HttpGet("/api/makes")]
         public async Task<IEnumerable<MakeResource>> GetMakesAsync()
         {
-            var makes = await dbContext.Makes.Include(m => m.Models).ToListAsync();
+            var makes = await makesRepository.GetMakesWithModels();
 
-            return mapper.Map<List<Make>, List<MakeResource>>(makes);
+            return mapper.Map<List<Make>, List<MakeResource>>(makes.ToList());
         }
     }
 }

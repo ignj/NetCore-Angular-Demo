@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace NetCore_Angular_Demo.Models
+namespace NetCore_Angular_Demo.Core
 {
     [Table("VehicleFeatures")]
     public class VehicleFeature

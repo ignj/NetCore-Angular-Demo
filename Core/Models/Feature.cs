@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace NetCore_Angular_Demo.Models
+namespace NetCore_Angular_Demo.Core
 {
     public class Feature
     {

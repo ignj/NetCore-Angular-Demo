@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NetCore_Angular_Demo.Controllers.Resources;
-using NetCore_Angular_Demo.Models;
-using NetCore_Angular_Demo.Persistence;
+using NetCore_Angular_Demo.Core;
 using System;
 using System.Threading.Tasks;
 
@@ -11,14 +9,18 @@ namespace NetCore_Angular_Demo.Controllers
 {
     [Route("/api/vehicles")]
     public class VehiclesController : Controller
-    {
-        private readonly AppDbContext context;
+    {        
         private readonly IMapper mapper;
+        private readonly IVehicleRepository vehicleRepository;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly IModelRepository modelRepository;
 
-        public VehiclesController(AppDbContext appDbContext, IMapper mapper)
-        {
-            this.context = appDbContext;
+        public VehiclesController(IMapper mapper, IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, IModelRepository modelRepository)
+        {            
             this.mapper = mapper;
+            this.vehicleRepository = vehicleRepository;
+            this.unitOfWork = unitOfWork;
+            this.modelRepository = modelRepository;
         }
 
         public IActionResult Index()
@@ -27,23 +29,26 @@ namespace NetCore_Angular_Demo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateVehicle([FromBody] VehicleResource vehicleResource)
+        public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             /* Business validation */
-            var model = await context.Models.FindAsync(vehicleResource.ModelId);
+            var model = await modelRepository.GetModel(vehicleResource.ModelId);
             if (model == null)
             {
                 ModelState.AddModelError("ModelId", "Invalid model id");
                 return BadRequest(ModelState);
             }
 
-            var vehicle = mapper.Map<VehicleResource, Vehicle>(vehicleResource);
+            var vehicle = mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource);
             vehicle.LastUpdate = DateTime.Now;
 
-            context.Vehicles.Add(vehicle);
-            await context.SaveChangesAsync();
+            vehicleRepository.Add(vehicle);
+            await unitOfWork.CompleteAsync();
+
+            // Reload entire vehicle
+            vehicle = await vehicleRepository.GetVehicle(vehicle.Id);
 
             var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
 
@@ -51,26 +56,27 @@ namespace NetCore_Angular_Demo.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateVehicle(int id, [FromBody] VehicleResource vehicleResource)
+        public async Task<IActionResult> UpdateVehicle(int id, [FromBody] SaveVehicleResource vehicleResource)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);            
 
             /* Business validation */
-            var model = await context.Models.FindAsync(vehicleResource.ModelId);
+            var model = await modelRepository.GetModel(vehicleResource.ModelId);
             if (model == null)
             {
                 ModelState.AddModelError("ModelId", "Invalid model id");
                 return BadRequest(ModelState);
             }
 
-            var vehicle = await context.Vehicles.Include(v => v.Features).SingleOrDefaultAsync(v => v.Id == id);
+            // Reload entire vehicle
+            var vehicle = await vehicleRepository.GetVehicle(id);
 
             if (vehicle == null) return NotFound();
 
-            mapper.Map<VehicleResource, Vehicle>(vehicleResource, vehicle);
+            mapper.Map<SaveVehicleResource, Vehicle>(vehicleResource, vehicle);
             vehicle.LastUpdate = DateTime.Now;
-            
-            await context.SaveChangesAsync();
+
+            await unitOfWork.CompleteAsync();
 
             var result = mapper.Map<Vehicle, VehicleResource>(vehicle);
 
@@ -80,12 +86,12 @@ namespace NetCore_Angular_Demo.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
-            var vehicle = await context.Vehicles.FindAsync(id);
+            var vehicle = await vehicleRepository.GetVehicle(id, includeRelated: false);
 
             if (vehicle == null) return NotFound();
 
-            context.Remove(vehicle);
-            await context.SaveChangesAsync();
+            vehicleRepository.Remove(vehicle);
+            await unitOfWork.CompleteAsync();
 
             return Ok(id);
         }
@@ -93,8 +99,7 @@ namespace NetCore_Angular_Demo.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetVehicle(int id)
         {
-            var vehicle = await context.Vehicles.Include(v => v.Features).SingleOrDefaultAsync(v => v.Id == id);
-            Console.WriteLine(vehicle);
+            var vehicle = await vehicleRepository.GetVehicle(id);
 
             if (vehicle == null) return NotFound();
 

@@ -1,25 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using NetCore_Angular_Demo.Controllers.Resources;
-using NetCore_Angular_Demo.Models;
+using NetCore_Angular_Demo.Core;
 using NetCore_Angular_Demo.Persistence;
 
 namespace NetCore_Angular_Demo.Controllers
 {
     public class FeaturesController : Controller
-    {
-        private readonly AppDbContext dbContext;
+    {        
         private readonly IMapper mapper;
+        private readonly IFeatureRepository featureRepository;
 
-        public FeaturesController(AppDbContext dbContext, IMapper mapper)
-        {
-            this.dbContext = dbContext;
+        public FeaturesController(AppDbContext dbContext, IMapper mapper, IFeatureRepository featureRepository)
+        {            
             this.mapper = mapper;
+            this.featureRepository = featureRepository;
         }
 
         public IActionResult Index()
@@ -28,13 +26,11 @@ namespace NetCore_Angular_Demo.Controllers
         }
 
         [HttpGet("/api/features")]
-        public async Task<IEnumerable<FeatureResource>> GetFeaturesAsync()
+        public async Task<IEnumerable<KeyValuePairResource>> GetFeaturesAsync()
         {
-            var features = await dbContext.Features.ToListAsync();
+            var features = await featureRepository.GetFeatures();
 
-            return mapper.Map<List<Feature>, List<FeatureResource>>(features);
-
-
+            return mapper.Map<List<Feature>, List<KeyValuePairResource>>(features.ToList());
         }
 
     }
