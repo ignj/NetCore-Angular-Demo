@@ -1,5 +1,6 @@
 import { VehicleService } from '../services/vehicle.service';
 import { Component, OnInit } from '@angular/core';
+import { ToastrManager } from 'ng6-toastr-notifications';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -16,7 +17,8 @@ export class VehicleFormComponent implements OnInit {
   };
 
   constructor(
-    private vehicleService: VehicleService
+    private vehicleService: VehicleService,
+    private toastr: ToastrManager
   ) { }
 
   ngOnInit() {
@@ -48,6 +50,10 @@ export class VehicleFormComponent implements OnInit {
 
   submit(){
     this.vehicleService.create(this.vehicle)
-                       .subscribe(x => console.log(x));
+                       .subscribe(
+                         x => console.log(x),
+                         err => {
+                           this.toastr.errorToastr('Unexpected error.', 'Oops!', { animate: null });
+                        });
   }
 }
