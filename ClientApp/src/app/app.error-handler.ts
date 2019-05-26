@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/browser";
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { ErrorHandler, Inject, Injector } from "@angular/core";
+import { ErrorHandler, Inject, Injector, isDevMode } from "@angular/core";
 
 export class AppErrorHandler implements ErrorHandler{
 
@@ -11,8 +11,14 @@ export class AppErrorHandler implements ErrorHandler{
         return this.injector.get(ToastrManager);
     }    
 
-    handleError(error: any): void {           
-        Sentry.captureException(error);
+    handleError(error: any): void {        
+        if (!isDevMode()){
+            Sentry.captureException(error);    
+        }
+        else{
+            throw error;
+        }
+        
         console.log(error);
 
         this.toastrManager.errorToastr('Unexpected error.', 'Oops!', { animate: null });        
