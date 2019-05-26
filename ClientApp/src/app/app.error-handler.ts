@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/browser";
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { ErrorHandler, Inject, Injector } from "@angular/core";
 
@@ -8,9 +9,14 @@ export class AppErrorHandler implements ErrorHandler{
     // Need to get ToastrManager from injector rather than constructor injection to avoid cyclic dependency error
     private get toastrManager(): ToastrManager {
         return this.injector.get(ToastrManager);
-    }
+    }    
 
-    handleError(error: any): void {        
+    handleError(error: any): void {           
+        Sentry.captureException(error);
+        console.log(error);
+
         this.toastrManager.errorToastr('Unexpected error.', 'Oops!', { animate: null });        
     }    
+
+    
 }
