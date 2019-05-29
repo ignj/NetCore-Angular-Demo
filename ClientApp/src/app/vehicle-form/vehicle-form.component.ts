@@ -1,6 +1,9 @@
 import { VehicleService } from '../services/vehicle.service';
 import { Component, OnInit } from '@angular/core';
 import { ToastrManager } from 'ng6-toastr-notifications';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators/switchMap';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -17,16 +20,44 @@ export class VehicleFormComponent implements OnInit {
   };
 
   constructor(
+    private route: ActivatedRoute,
+    private router: Router,
     private vehicleService: VehicleService,
     private toastr: ToastrManager
-  ) { }
+  ) {
+
+    //Get id from route
+    route.params.subscribe(p => {
+      this.vehicle.id = +p['id'];
+    })
+
+   }
 
   ngOnInit() {
-    this.vehicleService.getMakes().subscribe((makes: any[]) =>
-      this.makes = makes);
 
-    this.vehicleService.getFeatures().subscribe((features: any[]) =>
-      this.features = features);
+    //Set up the endpoints to call
+    var sources = [
+      this.vehicleService.getMakes(),
+      this.vehicleService.getFeatures(),
+    ]
+
+    if (this.vehicle.id) 
+      sources.push(this.vehicleService.getVehicle(this.vehicle.id))
+
+    //Put the call asociated to the data lo load for the view. The requests go to the server in parallel
+    //So the order doesn't matter
+    Observable.forkJoin(sources)
+              .subscribe(data => {
+                this.makes = <any[]>data[0];
+                this.features = <any[]>data[1];
+                
+                if (this.vehicle.id)
+                  this.vehicle = data[2];
+              }, err => {
+                if (err.status == 404){
+                  this.router.navigate(['']);
+                }
+              });
   }
 
   onMakeChange(){
