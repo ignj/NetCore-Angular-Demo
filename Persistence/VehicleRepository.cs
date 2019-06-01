@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NetCore_Angular_Demo.Core;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Persistence
@@ -42,6 +43,16 @@ namespace NetCore_Angular_Demo.Persistence
         public void Remove(Vehicle vehicle)
         {
             context.Vehicles.Remove(vehicle);
+        }
+
+        public async Task<IEnumerable<Vehicle>> GetVehicles()
+        {
+            return await context.Vehicles
+                                .Include(v => v.Model)
+                                    .ThenInclude(m => m.Make)
+                                .Include(v => v.Features)
+                                    .ThenInclude(vf => vf.Feature)
+                                .ToListAsync();
         }
     }
 }

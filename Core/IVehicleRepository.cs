@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Core
 {
@@ -9,5 +10,7 @@ namespace NetCore_Angular_Demo.Core
         void Add(Vehicle vehicle);
 
         void Remove(Vehicle vehicle);
+
+        Task<IEnumerable<Vehicle>> GetVehicles();
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using NetCore_Angular_Demo.Controllers.Resources;
 using NetCore_Angular_Demo.Core;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Controllers
@@ -106,6 +107,14 @@ namespace NetCore_Angular_Demo.Controllers
             var vehicleResource = mapper.Map<Vehicle, VehicleResource>(vehicle);
 
             return Ok(vehicleResource);
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<VehicleResource>> GetVehicles()
+        {
+            var vehicles = await vehicleRepository.GetVehicles();
+
+            return mapper.Map<IEnumerable<Vehicle>, IEnumerable<VehicleResource>>(vehicles);
         }
     }
 }
