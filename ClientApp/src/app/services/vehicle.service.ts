@@ -1,3 +1,4 @@
+import { SaveVehicle } from './../models/SaveVehicle';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
@@ -21,5 +22,13 @@ export class VehicleService {
 
   getVehicle(id){
     return this.http.get('/api/vehicles/' + id);
+  }
+
+  update(vehicle: SaveVehicle){
+    return this.http.put('/api/vehicles/' + vehicle.id, vehicle);
+  }
+
+  delete(id){
+    return this.http.delete('/api/vehicles/' + id);
   }
 }
