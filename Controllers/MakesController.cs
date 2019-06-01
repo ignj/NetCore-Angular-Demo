@@ -14,9 +14,9 @@ namespace NetCore_Angular_Demo.Controllers
     public class MakesController : Controller
     {        
         private readonly IMapper mapper;
-        private readonly IMakesRepository makesRepository;
+        private readonly IMakeRepository makesRepository;
 
-        public MakesController(IMapper mapper, IMakesRepository makesRepository)
+        public MakesController(IMapper mapper, IMakeRepository makesRepository)
         {            
             this.mapper = mapper;
             this.makesRepository = makesRepository;
