@@ -50,8 +50,10 @@ namespace NetCore_Angular_Demo.Persistence
             context.Vehicles.Remove(vehicle);
         }
 
-        public async Task<IEnumerable<Vehicle>> GetVehicles(VehicleQuery queryObject)
+        public async Task<QueryResult<Vehicle>> GetVehicles(VehicleQuery queryObject)
         {
+            var result = new QueryResult<Vehicle>();
+
             var query = context.Vehicles
                                 .Include(v => v.Model)
                                     .ThenInclude(m => m.Make)
@@ -76,9 +78,12 @@ namespace NetCore_Angular_Demo.Persistence
             query = query.ApplyOrdering(queryObject, columnsMap);
 
             //Paging
+            result.TotalItems = await query.CountAsync();
             query = query.ApplyPaging(queryObject);
 
-            return await query.ToListAsync();            
+            result.Items = await query.ToListAsync();
+
+            return result;
         }        
     }
 }
