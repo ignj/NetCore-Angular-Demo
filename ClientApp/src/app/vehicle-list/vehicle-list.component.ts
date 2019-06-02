@@ -14,10 +14,10 @@ export class VehicleListComponent implements OnInit {
   models: KeyValuePair[];
   query: any = {};
   columns = [
-    { title: 'Id' },
-    { title: 'Contact Name', key: 'contactName', isSortable: true },
+    { title: 'Id' },    
     { title: 'Make', key: 'make', isSortable: true },
     { title: 'Model', key: 'model', isSortable: true },
+    { title: 'Contact Name', key: 'contactName', isSortable: true },
     { }
   ]
 

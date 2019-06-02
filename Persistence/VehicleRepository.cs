@@ -75,6 +75,9 @@ namespace NetCore_Angular_Demo.Persistence
 
             query = query.ApplyOrdering(queryObject, columnsMap);
 
+            //Paging
+            query = query.ApplyPaging(queryObject);
+
             return await query.ToListAsync();            
         }        
     }
