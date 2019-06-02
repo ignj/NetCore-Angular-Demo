@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using NetCore_Angular_Demo.Controllers.Resources;
 using NetCore_Angular_Demo.Core;
+using NetCore_Angular_Demo.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace NetCore_Angular_Demo.Mapping
         public MappingProfile()
         {
             //Domain to API resource
+            CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
             CreateMap<Make, MakeResource>();
             CreateMap<Make, KeyValuePairResource>();
             CreateMap<Model, KeyValuePairResource>();
@@ -43,6 +45,7 @@ namespace NetCore_Angular_Demo.Mapping
                 .ForMember(vr => vr.Make, opt => opt.MapFrom(v => v.Model.Make));
 
             //API Resourse to Domain class
+            CreateMap<VehicleQueryResource, VehicleQuery>();
             CreateMap<SaveVehicleResource, Vehicle>()
                 .ForMember(v => v.Id, opt => opt.Ignore())
                 .ForMember(v => v.ContactName, opt => opt.MapFrom(vr => vr.Contact.Name))

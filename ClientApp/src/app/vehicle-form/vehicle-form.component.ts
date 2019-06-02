@@ -114,9 +114,9 @@ export class VehicleFormComponent implements OnInit {
                          });
     }
     else{
-      //create the vehicle
+      //create the vehicle      
       this.vehicleService.create(this.vehicle)
-                       .subscribe(x => console.log(x));
+                         .subscribe(x => console.log(x));
     }
   }
 

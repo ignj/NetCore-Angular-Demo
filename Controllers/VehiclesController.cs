@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using NetCore_Angular_Demo.Controllers.Resources;
 using NetCore_Angular_Demo.Core;
+using NetCore_Angular_Demo.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Controllers
@@ -30,7 +32,9 @@ namespace NetCore_Angular_Demo.Controllers
 
         [HttpPost]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
-        {            
+        {
+            ModelState.Remove("Id"); //TODO: Create a specific model to the creation of vehicles without an id property
+
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             /* Business validation */
@@ -106,6 +110,16 @@ namespace NetCore_Angular_Demo.Controllers
             var vehicleResource = mapper.Map<Vehicle, VehicleResource>(vehicle);
 
             return Ok(vehicleResource);
+        }
+
+        [HttpGet]
+        public async Task<QueryResultResource<VehicleResource>> GetVehicles(VehicleQueryResource filterResource)
+        {
+            var filter = mapper.Map<VehicleQueryResource, VehicleQuery>(filterResource);
+
+            var queryResult = await vehicleRepository.GetVehicles(filter);
+
+            return mapper.Map<QueryResult<Vehicle>, QueryResultResource<VehicleResource>>(queryResult);
         }
     }
 }
