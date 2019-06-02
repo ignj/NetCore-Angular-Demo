@@ -1,6 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NetCore_Angular_Demo.Core;
+using NetCore_Angular_Demo.Core.Models;
+using NetCore_Angular_Demo.Extensions;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Persistence
@@ -45,14 +50,32 @@ namespace NetCore_Angular_Demo.Persistence
             context.Vehicles.Remove(vehicle);
         }
 
-        public async Task<IEnumerable<Vehicle>> GetVehicles()
+        public async Task<IEnumerable<Vehicle>> GetVehicles(VehicleQuery queryObject)
         {
-            return await context.Vehicles
+            var query = context.Vehicles
                                 .Include(v => v.Model)
                                     .ThenInclude(m => m.Make)
                                 .Include(v => v.Features)
                                     .ThenInclude(vf => vf.Feature)
-                                .ToListAsync();
-        }
+                                .AsQueryable();
+
+            if (queryObject.MakeId.HasValue)
+                query = query.Where(v => v.Model.MakeId == queryObject.MakeId.Value);
+
+            if (queryObject.ModelId.HasValue)
+                query = query.Where(v => v.ModelId == queryObject.ModelId);
+
+            //Mapping for different query filters
+            var columnsMap = new Dictionary<string, Expression<Func<Vehicle, object>>>()
+            {
+                ["make"] = v => v.Model.Make.Name,
+                ["model"] = v => v.Model.Name,
+                ["contactName"] = v => v.ContactName                
+            };
+
+            query = query.ApplyOrdering(queryObject, columnsMap);
+
+            return await query.ToListAsync();            
+        }        
     }
 }

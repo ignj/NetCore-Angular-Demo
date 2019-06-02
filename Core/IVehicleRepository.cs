@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NetCore_Angular_Demo.Core.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Core
@@ -11,6 +12,6 @@ namespace NetCore_Angular_Demo.Core
 
         void Remove(Vehicle vehicle);
 
-        Task<IEnumerable<Vehicle>> GetVehicles();
+        Task<IEnumerable<Vehicle>> GetVehicles(VehicleQuery filter);
     }
 }
