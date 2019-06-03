@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using NetCore_Angular_Demo.Controllers.Resources;
 using NetCore_Angular_Demo.Core;
 using NetCore_Angular_Demo.Core.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NetCore_Angular_Demo.Controllers
@@ -16,13 +15,15 @@ namespace NetCore_Angular_Demo.Controllers
     [Route("/api/vehicles/{vehicleId}/photos")]
     public class PhotosController : Controller
     {
+        private readonly PhotoSettings photoSettings;
         private readonly IHostingEnvironment host;
         private readonly IVehicleRepository vehicleRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
 
-        public PhotosController(IHostingEnvironment host, IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, IMapper mapper)
+        public PhotosController(IHostingEnvironment host, IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptionsSnapshot<PhotoSettings> options)
         {
+            this.photoSettings = options.Value;
             this.host = host;
             this.vehicleRepository = vehicleRepository;
             this.unitOfWork = unitOfWork;
@@ -33,7 +34,12 @@ namespace NetCore_Angular_Demo.Controllers
         public async Task<IActionResult> UploadAsync(int vehicleId, IFormFile file)
         {
             var vehicle = await vehicleRepository.GetVehicle(vehicleId, includeRelated: false);
+
             if (vehicle == null) return NotFound();
+            if (file == null) return BadRequest("Null file");
+            if (file.Length == 0) return BadRequest("Empty file");
+            if (file.Length > photoSettings.MaxBytes) return BadRequest("Max file size exceeded");
+            if (!photoSettings.IsSupported(file.FileName)) return BadRequest("Invalid file type");
 
             var uploadsFolderPath = Path.Combine(host.WebRootPath, "uploads");
 
