@@ -49,6 +49,8 @@
     <Compile Remove="Migrations\20190519193023_AddVehicle.Designer.cs" />
     <Compile Remove="Migrations\20190519194323_AddVehicle.cs" />
     <Compile Remove="Migrations\20190519194323_AddVehicle.Designer.cs" />
+    <Compile Remove="Migrations\20190602214358_AddPhoto.cs" />
+    <Compile Remove="Migrations\20190602214358_AddPhoto.Designer.cs" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
