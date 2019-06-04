@@ -1,6 +1,7 @@
+import { ProgressService } from './../services/progress.service';
 import { PhotoService } from './../services/photo.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VehicleService } from '../services/vehicle.service';
 import { showReportDialog } from '@sentry/browser';
@@ -16,13 +17,16 @@ export class ViewVehicleComponent implements OnInit {
   vehicleId: number; 
   activeTab: string;
   photos: any[];
+  progress: any;
 
   constructor(
+    private zone: NgZone,
     private route: ActivatedRoute, 
     private router: Router,
     private toastr: ToastrManager,
     private photoService: PhotoService,
-    private vehicleService: VehicleService) { 
+    private vehicleService: VehicleService,
+    private progressService: ProgressService) { 
 
     route.params.subscribe(p => {  
       this.vehicleId = +p['id'];    
@@ -67,12 +71,27 @@ export class ViewVehicleComponent implements OnInit {
     this.activeTab = activeTab;
   }
 
-  uploadPhoto(){
-    var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+  uploadPhoto(){    
 
-    this.photoService.upload(this.vehicleId, nativeElement.files[0])
+    this.progressService.startTracking()
+      .subscribe(progress => {
+          console.log(progress);
+          this.zone.run(() => {
+            this.progress = progress;
+          });
+        },
+        null,
+        () => { this.progress = null; }
+      );
+
+    var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+    var file = nativeElement.files[0];
+    nativeElement.value = '';
+
+    this.photoService.upload(this.vehicleId, file)
       .subscribe(photo => {
         this.photos.push(photo);
-      })
+      },
+      err => { this.toastr.errorToastr(err.text(), 'Error', { animate: null }); })
   }
 }
