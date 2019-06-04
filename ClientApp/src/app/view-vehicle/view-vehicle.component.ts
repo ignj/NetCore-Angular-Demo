@@ -1,5 +1,6 @@
+import { PhotoService } from './../services/photo.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VehicleService } from '../services/vehicle.service';
 import { showReportDialog } from '@sentry/browser';
@@ -10,14 +11,17 @@ import { showReportDialog } from '@sentry/browser';
   styleUrls: ['./view-vehicle.component.css']
 })
 export class ViewVehicleComponent implements OnInit {
+  @ViewChild('fileInput') fileInput: ElementRef;
   vehicle: any;
   vehicleId: number; 
   activeTab: string;
+  photos: any[];
 
   constructor(
     private route: ActivatedRoute, 
     private router: Router,
     private toastr: ToastrManager,
+    private photoService: PhotoService,
     private vehicleService: VehicleService) { 
 
     route.params.subscribe(p => {  
@@ -31,6 +35,9 @@ export class ViewVehicleComponent implements OnInit {
 
   ngOnInit() {
     this.activeTab = 'vehicle';
+
+    this.photoService.getPhoto(this.vehicleId)
+      .subscribe(photos => this.photos = photos as any[]);
 
     this.vehicleService.getVehicle(this.vehicleId)
       .subscribe(        
@@ -60,5 +67,12 @@ export class ViewVehicleComponent implements OnInit {
     this.activeTab = activeTab;
   }
 
-  
+  uploadPhoto(){
+    var nativeElement: HTMLInputElement = this.fileInput.nativeElement;
+
+    this.photoService.upload(this.vehicleId, nativeElement.files[0])
+      .subscribe(photo => {
+        this.photos.push(photo);
+      })
+  }
 }

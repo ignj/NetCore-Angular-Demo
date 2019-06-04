@@ -7,6 +7,7 @@ using NetCore_Angular_Demo.Controllers.Resources;
 using NetCore_Angular_Demo.Core;
 using NetCore_Angular_Demo.Core.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -20,14 +21,16 @@ namespace NetCore_Angular_Demo.Controllers
         private readonly IVehicleRepository vehicleRepository;
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper mapper;
+        private readonly IPhotoRepository photoRepository;
 
-        public PhotosController(IHostingEnvironment host, IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptionsSnapshot<PhotoSettings> options)
+        public PhotosController(IHostingEnvironment host, IVehicleRepository vehicleRepository, IUnitOfWork unitOfWork, IMapper mapper, IOptionsSnapshot<PhotoSettings> options, IPhotoRepository photoRepository)
         {
             this.photoSettings = options.Value;
             this.host = host;
             this.vehicleRepository = vehicleRepository;
             this.unitOfWork = unitOfWork;
             this.mapper = mapper;
+            this.photoRepository = photoRepository;
         }
 
         [HttpPost]
@@ -60,7 +63,15 @@ namespace NetCore_Angular_Demo.Controllers
             await unitOfWork.CompleteAsync();
 
             return Ok(mapper.Map<Photo, PhotoResource>(photo));
-        }    
+        }
+
+        [HttpGet]
+        public async Task<IEnumerable<PhotoResource>> GetPhotos(int vehicleId)
+        {
+            var photos = await photoRepository.GetPhotos(vehicleId);
+
+            return mapper.Map<IEnumerable<Photo>, IEnumerable<PhotoResource>>(photos);
+        }
 
     }
 }

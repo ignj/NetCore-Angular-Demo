@@ -1,3 +1,4 @@
+import { PhotoService } from './services/photo.service';
 import * as Sentry from "@sentry/browser";
 import { AppErrorHandler } from './app.error-handler';
 import { NgModule, ErrorHandler } from '@angular/core';
@@ -54,7 +55,8 @@ Sentry.init({
   ],
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
-    VehicleService    
+    VehicleService,
+    PhotoService
   ],
   bootstrap: [AppComponent]
 })

@@ -33,7 +33,8 @@ namespace NetCore_Angular_Demo
             services.AddScoped<IVehicleRepository, VehicleRepository>();
             services.AddScoped<IModelRepository, ModelRepository>();
             services.AddScoped<IMakeRepository, MakeRepository>();
-            services.AddScoped<IFeatureRepository, FeatureRepository>();            
+            services.AddScoped<IFeatureRepository, FeatureRepository>();
+            services.AddScoped<IPhotoRepository, PhotoRepository>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
