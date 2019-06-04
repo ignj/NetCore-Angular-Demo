@@ -12,6 +12,8 @@ export class AppErrorHandler implements ErrorHandler{
     }    
 
     handleError(error: any): void {        
+        this.toastrManager.errorToastr('Unexpected error.', 'Oops!', { animate: null });
+
         if (!isDevMode()){
             Sentry.captureException(error);    
         }
@@ -19,9 +21,7 @@ export class AppErrorHandler implements ErrorHandler{
             throw error;
         }
         
-        console.log(error);
-
-        this.toastrManager.errorToastr('Unexpected error.', 'Oops!', { animate: null });        
+        console.log(error);        
     }    
 
     

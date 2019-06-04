@@ -2,11 +2,12 @@ import { SaveVehicle } from './../models/SaveVehicle';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { Vehicle } from '../models/vehicle';
 
 @Injectable()
 export class VehicleService {
 
-  private readonly vehiclesEndpoint = '/api/vehicles';
+  private readonly vehiclesEndpoint = '/api/vehicles/';
 
   constructor(private http: HttpClient) { }
 
@@ -19,7 +20,7 @@ export class VehicleService {
   }
 
   create(vehicle){
-    return this.http.post(this.vehiclesEndpoint, vehicle);                
+    return this.http.post<Vehicle>(this.vehiclesEndpoint, vehicle);                
   }
 
   getVehicle(id){
@@ -31,7 +32,7 @@ export class VehicleService {
   }
 
   update(vehicle: SaveVehicle){
-    return this.http.put(this.vehiclesEndpoint + vehicle.id, vehicle);
+    return this.http.put<Vehicle>(this.vehiclesEndpoint + vehicle.id, vehicle);
   }
 
   delete(id){

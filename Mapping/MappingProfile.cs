@@ -14,6 +14,7 @@ namespace NetCore_Angular_Demo.Mapping
         public MappingProfile()
         {
             //Domain to API resource
+            CreateMap<Photo, PhotoResource>();
             CreateMap(typeof(QueryResult<>), typeof(QueryResultResource<>));
             CreateMap<Make, MakeResource>();
             CreateMap<Make, KeyValuePairResource>();
