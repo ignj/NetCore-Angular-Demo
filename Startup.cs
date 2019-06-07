@@ -11,6 +11,7 @@ using NetCore_Angular_Demo.Mapping;
 using NetCore_Angular_Demo.Core;
 using NetCore_Angular_Demo.Persistence;
 using NetCore_Angular_Demo.Core.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace NetCore_Angular_Demo
 {
@@ -57,6 +58,17 @@ namespace NetCore_Angular_Demo
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            // 1. Add Authentication Services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = "https://ignjnetcoreangular.auth0.com/";
+                options.Audience = " https://api.netcoreangular.com";
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +87,9 @@ namespace NetCore_Angular_Demo
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
+
+            // 2. Enable authentication middleware
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
