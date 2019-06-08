@@ -1,3 +1,4 @@
+import { AuthService } from './services/auth.service';
 import { BrowserXhrWithProgress } from './services/progress.service';
 import { ProgressService } from './services/progress.service';
 import { BrowserXhr } from '@angular/http';
@@ -48,6 +49,8 @@ Sentry.init({
     ToastrModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
+      { path: 'home', component: HomeComponent, pathMatch: 'full' },
+      { path: 'callback', redirectTo: ''},
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent },
       { path: 'vehicles/new', component: VehicleFormComponent },
@@ -59,6 +62,7 @@ Sentry.init({
   providers: [
     { provide: ErrorHandler, useClass: AppErrorHandler },
     { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+    AuthService,
     VehicleService,
     PhotoService,
     ProgressService
