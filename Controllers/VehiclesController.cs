@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NetCore_Angular_Demo.Controllers.Resources;
 using NetCore_Angular_Demo.Core;
@@ -31,6 +32,7 @@ namespace NetCore_Angular_Demo.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
             ModelState.Remove("Id"); //TODO: Create a specific model to the creation of vehicles without an id property

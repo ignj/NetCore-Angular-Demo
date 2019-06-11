@@ -42,7 +42,8 @@ export class AuthService {
       if (authResult && authResult.accessToken && authResult.idToken) {
         window.location.hash = '';
         this.localLogin(authResult);
-        this.router.navigate(['/home']);
+        this.router.navigate(['/home']);        
+        localStorage.setItem('token', authResult.idToken);
       } else if (err) {
         this.router.navigate(['/home']);
         console.log(err);

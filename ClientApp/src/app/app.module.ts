@@ -1,7 +1,4 @@
 import { AuthService } from './services/auth.service';
-import { BrowserXhrWithProgress } from './services/progress.service';
-import { ProgressService } from './services/progress.service';
-import { BrowserXhr } from '@angular/http';
 import { PhotoService } from './services/photo.service';
 import * as Sentry from "@sentry/browser";
 import { AppErrorHandler } from './app.error-handler';
@@ -24,10 +21,16 @@ import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 import { PaginationComponent } from './shared/pagination.component';
 import { ViewVehicleComponent } from './view-vehicle/view-vehicle.component';
+import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
+import { AuthGuard } from './services/auth-guard.service';
 
 Sentry.init({
   dsn: "https://bf3599ead2334de8a71c7ac2472cf1cf@sentry.io/1468251"
 });
+
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
 
 @NgModule({
   declarations: [
@@ -45,7 +48,13 @@ Sentry.init({
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
-    BrowserAnimationsModule, 
+    BrowserAnimationsModule,     
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ['localhost:44342']        
+      }
+    }),
     ToastrModule.forRoot(),
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -60,12 +69,11 @@ Sentry.init({
     ])
   ],
   providers: [
-    { provide: ErrorHandler, useClass: AppErrorHandler },
-    { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+    { provide: ErrorHandler, useClass: AppErrorHandler },    
     AuthService,
     VehicleService,
     PhotoService,
-    ProgressService
+    AuthGuard,
   ],
   bootstrap: [AppComponent]
 })
