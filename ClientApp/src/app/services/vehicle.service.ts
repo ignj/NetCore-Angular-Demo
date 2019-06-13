@@ -1,7 +1,6 @@
 import { SaveVehicle } from './../models/SaveVehicle';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { Vehicle } from '../models/vehicle';
 
 @Injectable()

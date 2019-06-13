@@ -1,3 +1,4 @@
+import { AuthService } from './../services/auth.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,6 +8,16 @@ import { Component } from '@angular/core';
 })
 export class NavMenuComponent {
   isExpanded = false;
+
+  constructor(private authService: AuthService) {
+    authService.handleAuthentication();
+  }
+
+  ngOnInit() {
+    if (this.authService.isAuthenticated()) {
+      this.authService.renewTokens();
+    }
+  }
 
   collapse() {
     this.isExpanded = false;

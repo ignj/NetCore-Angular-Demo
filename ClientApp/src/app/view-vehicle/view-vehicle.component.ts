@@ -1,15 +1,21 @@
-import { ProgressService } from './../services/progress.service';
+import { AuthService } from './../services/auth.service';
+import { ProgressService, BrowserXhrWithProgress } from './../services/progress.service';
 import { PhotoService } from './../services/photo.service';
 import { ToastrManager } from 'ng6-toastr-notifications';
 import { Component, OnInit, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { VehicleService } from '../services/vehicle.service';
 import { showReportDialog } from '@sentry/browser';
+import { BrowserXhr } from '@angular/http';
 
 @Component({
   selector: 'app-view-vehicle',
   templateUrl: './view-vehicle.component.html',
-  styleUrls: ['./view-vehicle.component.css']
+  styleUrls: ['./view-vehicle.component.css'],
+  providers: [
+    { provide: BrowserXhr, useClass: BrowserXhrWithProgress },
+    ProgressService
+  ]
 })
 export class ViewVehicleComponent implements OnInit {
   @ViewChild('fileInput') fileInput: ElementRef;
@@ -26,7 +32,8 @@ export class ViewVehicleComponent implements OnInit {
     private toastr: ToastrManager,
     private photoService: PhotoService,
     private vehicleService: VehicleService,
-    private progressService: ProgressService) { 
+    private progressService: ProgressService,
+    private authService: AuthService) { 
 
     route.params.subscribe(p => {  
       this.vehicleId = +p['id'];    
