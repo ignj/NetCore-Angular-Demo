@@ -11,6 +11,17 @@ namespace NetCore_Angular_Demo.Extensions
     public static class IQueryableExtensions
     {
 
+        public static IQueryable<Vehicle> ApplyFiltering(this IQueryable<Vehicle> query, VehicleQuery queryObject)
+        {
+            if (queryObject.MakeId.HasValue)
+                query = query.Where(v => v.Model.MakeId == queryObject.MakeId.Value);
+
+            if (queryObject.ModelId.HasValue)
+                query = query.Where(v => v.ModelId == queryObject.ModelId);
+
+            return query;
+        }
+
         public static IQueryable<T> ApplyOrdering<T>(this IQueryable<T> query, IQueryObject queryObject, Dictionary<string, Expression<Func<T, object>>> columnsMap)
         {
             if (String.IsNullOrWhiteSpace(queryObject.SortBy) || !columnsMap.ContainsKey(queryObject.SortBy))
