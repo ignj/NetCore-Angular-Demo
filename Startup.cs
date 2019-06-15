@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +35,7 @@ namespace NetCore_Angular_Demo
             services.AddScoped<IMakeRepository, MakeRepository>();
             services.AddScoped<IFeatureRepository, FeatureRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
+            services.AddTransient<IPhotoService, PhotoService>(); //With the service you don't have anything in memory you might want to reuse between requests
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
