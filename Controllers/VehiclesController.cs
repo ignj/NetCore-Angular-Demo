@@ -35,7 +35,8 @@ namespace NetCore_Angular_Demo.Controllers
         [Authorize]
         public async Task<IActionResult> CreateVehicle([FromBody] SaveVehicleResource vehicleResource)
         {
-            ModelState.Remove("Id"); //TODO: Create a specific model to the creation of vehicles without an id property
+            //TODO: Create a specific model to the creation of vehicles without an id property
+            ModelState.Remove("Id");
 
             if (!ModelState.IsValid) return BadRequest(ModelState);
 

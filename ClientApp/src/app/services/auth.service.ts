@@ -45,7 +45,7 @@ export class AuthService {
         this.router.navigate(['/home']);        
         localStorage.setItem('token', authResult.idToken);
       } else if (err) {
-        this.router.navigate(['/home']);
+        //this.router.navigate(['/home']);
         console.log(err);
       }
     });

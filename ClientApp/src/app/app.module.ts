@@ -15,8 +15,6 @@ import { VehicleService } from './services/vehicle.service';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { CounterComponent } from './counter/counter.component';
-import { FetchDataComponent } from './fetch-data/fetch-data.component';
 import { VehicleFormComponent } from './vehicle-form/vehicle-form.component';
 import { VehicleListComponent } from './vehicle-list/vehicle-list.component';
 import { PaginationComponent } from './shared/pagination.component';
@@ -37,8 +35,6 @@ export function tokenGetter() {
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CounterComponent,
-    FetchDataComponent,
     VehicleFormComponent,
     VehicleListComponent,
     PaginationComponent,
@@ -60,8 +56,6 @@ export function tokenGetter() {
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'home', component: HomeComponent, pathMatch: 'full' },
       { path: 'callback', redirectTo: ''},
-      { path: 'counter', component: CounterComponent },
-      { path: 'fetch-data', component: FetchDataComponent },
       { path: 'vehicles/new', component: VehicleFormComponent },
       { path: 'vehicles/edit/:id', component: VehicleFormComponent },
       { path: 'vehicles/:id', component: ViewVehicleComponent },

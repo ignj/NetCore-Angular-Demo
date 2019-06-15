@@ -14,11 +14,11 @@ export class NavMenuComponent {
     this.authService = authService;
    }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.authService.handleAuthentication();
     if (this.authService.isAuthenticated()) {
       this.authService.renewTokens();
-    }
+    }    
   }
 
   collapse() {
