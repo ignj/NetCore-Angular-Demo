@@ -61,11 +61,7 @@ namespace NetCore_Angular_Demo.Persistence
                                     .ThenInclude(vf => vf.Feature)
                                 .AsQueryable();
 
-            if (queryObject.MakeId.HasValue)
-                query = query.Where(v => v.Model.MakeId == queryObject.MakeId.Value);
-
-            if (queryObject.ModelId.HasValue)
-                query = query.Where(v => v.ModelId == queryObject.ModelId);
+            query = query.ApplyFiltering(queryObject);
 
             //Mapping for different query filters
             var columnsMap = new Dictionary<string, Expression<Func<Vehicle, object>>>()
@@ -74,7 +70,6 @@ namespace NetCore_Angular_Demo.Persistence
                 ["model"] = v => v.Model.Name,
                 ["contactName"] = v => v.ContactName                
             };
-
             query = query.ApplyOrdering(queryObject, columnsMap);
 
             //Paging

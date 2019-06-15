@@ -1,3 +1,7 @@
-# NetCore1-Angular4-Demo
+# Net Core - Angular demo
 
-Todo: UT - Fluent API for database model - Repository pattern
+Simple app demo to try out features and techniques such as
+* Angular 5 and TypeScript
+* Repository and Unit of work pattern
+* Authentication through Auth0
+* Mapper and handle of DTOs - BOs

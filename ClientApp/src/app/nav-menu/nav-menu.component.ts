@@ -7,16 +7,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent {
+  private authService;
   isExpanded = false;
 
-  constructor(private authService: AuthService) {
-    authService.handleAuthentication();
-  }
+  constructor(authService: AuthService) {
+    this.authService = authService;
+   }
 
-  ngOnInit() {
+  ngOnInit() {    
+    this.authService.handleAuthentication();
     if (this.authService.isAuthenticated()) {
       this.authService.renewTokens();
-    }
+    }    
   }
 
   collapse() {
