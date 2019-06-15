@@ -36,6 +36,7 @@ namespace NetCore_Angular_Demo
             services.AddScoped<IFeatureRepository, FeatureRepository>();
             services.AddScoped<IPhotoRepository, PhotoRepository>();
             services.AddTransient<IPhotoService, PhotoService>(); //With the service you don't have anything in memory you might want to reuse between requests
+            services.AddTransient<IPhotoStorage, FileSystemPhotoStorage>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
